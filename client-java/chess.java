@@ -1,11 +1,15 @@
 import java.util.Vector;
 import java.util.Collections;
 import java.util.Random;
+import java.util.Stack;
+import java.util.Comparator;
 
 public class chess {
         public static  char [][] board = new char[6][5];
 	public static int move = 1;
 	private static boolean blackMove = false;
+//	public static Stack<String> //stack = new Stack<String>();
+	public static Stack<Integer> undoStack = new Stack<Integer>();
 	public static void reset() {
 		// reset the state of the game / your internal variables - note that this function is highly dependent on your implementation
 	
@@ -18,7 +22,8 @@ public class chess {
 	strOut += ".....\n";
 	strOut += "PPPPP\n";
 	strOut += "RNBQK\n";
-
+//	stack = new Stack<String>();
+	undoStack = new Stack<Integer>();
 	boardSet(strOut);
 	}
 	
@@ -27,14 +32,6 @@ public class chess {
 		
 		String strOut = "";
 		
-		/*strOut += "1 W\n";
-		strOut += "kqbnr\n";
-		strOut += "ppppp\n";
-		strOut += ".....\n";
-		strOut += ".....\n";
-		strOut += "PPPPP\n";
-		strOut += "RNBQK\n";*/
-
 		strOut += Integer.toString(move);
                 strOut += " ";
 		if (blackMove == true)
@@ -198,12 +195,6 @@ public class chess {
 	
 	public static int eval() {
 		// with reference to the state of the game, return the the evaluation score of the side on move - note that positive means an advantage while negative means a disadvantage
-		int multiplier = 1;
-		if (blackMove == true)
-		{
-			multiplier = -1;
-		}	
-		// p=1 r=2 n=3 b=4 q=5 k=16
 		int blackSum = 0;
 		int whiteSum = 0;
 		for(int i =0; i < 6; i++)
@@ -212,29 +203,39 @@ public class chess {
 			{
 				char c = board[i][j]; 
 				if (c == 'p')
+				{
+				//	if (i == 1)
+				//		blackSum +=5;
+				//	else
 					blackSum +=1;
+				}
 				if (c == 'P')
+				{
+				//	if (i == 4)
+				//		blackSum +=5;
+				//	else
 					whiteSum +=1;
+				}
 				if (c == 'r')
-					blackSum +=2;
+					blackSum +=8;
 				if (c == 'R')
-					whiteSum +=2;
+					whiteSum +=8;
 				if (c == 'n')
-					blackSum +=3;
+					blackSum +=6;
 				if (c == 'N')
-					whiteSum +=3;
+					whiteSum +=6;
 				if (c == 'b')
-					blackSum +=4;
+					blackSum +=12;
 				if (c == 'B')
-					whiteSum +=4;
+					whiteSum +=12;
 				if (c == 'q')
-					blackSum +=5;
+					blackSum +=20;
 				if (c == 'Q')
-					whiteSum +=5;
+					whiteSum +=20;
 				if (c == 'k')
-					blackSum +=16;
+					blackSum +=200;
 				if (c == 'K')
-					whiteSum +=16;
+					whiteSum +=200;
 				
 			}
 		}
@@ -266,49 +267,49 @@ public class chess {
 			if ( isValid(x+1,y) && isOwn(board[y][x+1]) == false)
 			{
 				toAdd = buildMove(x,y,x+1,y);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x-1,y) && isOwn(board[y][x-1]) == false)
 			{
 				toAdd = buildMove(x,y,x-1,y);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x, y+1) && isOwn(board[y+1][x]) == false)
 			{
 				toAdd = buildMove(x,y,x,y+1);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x,y-1) && isOwn(board[y-1][x]) == false)
 			{
 				toAdd = buildMove(x,y,x,y-1);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x+1, y+1) && isOwn(board[y+1][x+1]) == false)
 			{
 				toAdd = buildMove(x,y,x+1,y+1);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x+1,y-1) && isOwn(board[y-1][x+1]) == false)
 			{
 				toAdd = buildMove(x,y,x+1,y-1);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x-1, y+1) && isOwn(board[y+1][x-1]) == false)
 			{
 				toAdd = buildMove(x,y,x-1,y+1);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x-1,y-1) && isOwn(board[y-1][x-1]) == false)
 			{
 				toAdd = buildMove(x,y,x-1,y-1);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 		}
@@ -325,7 +326,7 @@ public class chess {
 			while (isValid(x,y+i) && isOwn(board[y+i][x]) == false)
 			{
 				toAdd = buildMove(x,y,x,y+i);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y+i][x]))
 					i = 11;
@@ -335,7 +336,7 @@ public class chess {
 			while (isValid(x,y-i) && isOwn(board[y-i][x]) == false)
 			{
 				toAdd = buildMove(x,y,x,y-i);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y-i][x]))
 					i = 11;
@@ -345,7 +346,7 @@ public class chess {
 			while (isValid(x+i,y) && isOwn(board[y][x+i]) == false)
 			{
 				toAdd = buildMove(x,y,x+i,y);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y][x+i]))
 					i = 11;
@@ -355,7 +356,7 @@ public class chess {
 			while (isValid(x-i,y) && isOwn(board[y][x-i]) == false)
 			{
 				toAdd = buildMove(x,y,x-i,y);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y][x-i]))
 					i = 11;
@@ -365,7 +366,7 @@ public class chess {
 			while (isValid(x+i,y+i) && isOwn(board[y+i][x+i]) == false)
 			{
 				toAdd = buildMove(x,y,x+i,y+i);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y+i][x+i]))
 					i = 11;
@@ -375,7 +376,7 @@ public class chess {
 			while (isValid(x+i,y-i) && isOwn(board[y-i][x+i]) == false)
 			{
 				toAdd = buildMove(x,y,x+i,y-i);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y-i][x+i]))
 					i = 11;
@@ -385,7 +386,7 @@ public class chess {
 			while (isValid(x-i,y+i) && isOwn(board[y+i][x-i]) == false)
 			{
 				toAdd = buildMove(x,y,x-i,y+i);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y+i][x-i]))
 					i = 11;
@@ -395,7 +396,7 @@ public class chess {
 			while (isValid(x-i,y-i) && isOwn(board[y-i][x-i]) == false)
 			{
 				toAdd = buildMove(x,y,x-i,y-i);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y-i][x-i]))
 					i = 11;
@@ -415,26 +416,26 @@ public class chess {
 			if ( isValid(x+1,y) && isNothing(board[y][x+1]))
 			{
 				toAdd = buildMove(x,y,x+1,y);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x-1,y) && isNothing(board[y][x-1]))
 			{
 				toAdd = buildMove(x,y,x-1,y);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				
 			}
 			if (isValid(x, y+1) && isNothing(board[y+1][x]))
 			{
 				toAdd = buildMove(x,y,x,y+1);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x,y-1) && isNothing(board[y-1][x]))
 			{
 				toAdd = buildMove(x,y,x,y-1);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 
@@ -443,7 +444,7 @@ public class chess {
 			while (isValid(x+i,y+i) && isOwn(board[y+i][x+i]) == false)
 			{
 				toAdd = buildMove(x,y,x+i,y+i);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y+i][x+i]))
 					i = 11;
@@ -453,7 +454,7 @@ public class chess {
 			while (isValid(x-i,y+i) && isOwn(board[y+i][x-i]) == false)
 			{
 				toAdd = buildMove(x,y,x-i,y+i);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y+i][x-i]))
 					i = 11;
@@ -463,7 +464,7 @@ public class chess {
 			while (isValid(x+i,y-i) && isOwn(board[y-i][x+i]) == false)
 			{
 				toAdd = buildMove(x,y,x+i,y-i);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y-i][x+i]))
 					i = 11;
@@ -473,7 +474,7 @@ public class chess {
 			while (isValid(x-i,y-i) && isOwn(board[y-i][x-i]) == false)
 			{
 				toAdd = buildMove(x,y,x-i,y-i);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y-i][x-i]))
 					i = 11;
@@ -492,49 +493,49 @@ public class chess {
 			if (isValid(x+2, y+1) && isOwn(board[y+1][x+2]) == false)
 			{	
 				toAdd = buildMove(x,y,x+2,y+1);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x+1,y+2) && isOwn(board[y+2][x+1]) == false)
 			{
 				toAdd = buildMove(x,y,x+1,y+2);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x+2,y-1) && isOwn(board[y-1][x+2]) == false)
 			{
 				toAdd = buildMove(x,y,x+2,y-1);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x+1,y-2) && isOwn(board[y-2][x+1]) == false)
 			{
 				toAdd = buildMove(x,y,x+1,y-2);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x-2,y+1) && isOwn(board[y+1][x-2]) == false)
 			{
 				toAdd = buildMove(x,y,x-2,y+1);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x-1,y+2) && isOwn(board[y+2][x-1]) == false)
 			{
 				toAdd = buildMove(x,y,x-1,y+2);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x-2,y-1) && isOwn(board[y-1][x-2]) == false)
 			{
 				toAdd = buildMove(x,y,x-2,y-1);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x-1,y-2) && isOwn(board[y-2][x-1]) == false)
 			{
 				toAdd = buildMove(x,y,x-1,y-2);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 		}
@@ -550,7 +551,7 @@ public class chess {
 			while (isValid(x+i,y) && isOwn(board[y][x+i]) == false)
 			{
 				toAdd = buildMove(x,y,x+i,y);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y][x+i]))
 					i = 11;
@@ -560,7 +561,7 @@ public class chess {
 			while (isValid(x-i,y) && isOwn(board[y][x-i]) == false)
 			{
 				toAdd = buildMove(x,y,x-i,y);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y][x-i]))
 					i = 11;
@@ -570,7 +571,7 @@ public class chess {
 			while (isValid(x,y+i) && isOwn(board[y+i][x]) == false)
 			{
 				toAdd = buildMove(x,y,x,y+i);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y+i][x]))
 					i = 11;
@@ -580,7 +581,7 @@ public class chess {
 			while (isValid(x,y-i) && isOwn(board[y-i][x]) == false)
 			{
 				toAdd = buildMove(x,y,x,y-i);
-				System.out.println(toAdd);
+			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y-i][x]))
 					i = 11;
@@ -602,19 +603,19 @@ public class chess {
 			if (isValid(x,y+1) && isNothing(board[y+1][x]))
 			{
 				toAdd = buildMove(x,y,x,y+1);
-				System.out.println( "pawn: " + toAdd);
+			//	System.out.println( "pawn: " + toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x+1,y+1) && isEnemy(board[y+1][x+1]))
 			{
 				toAdd = buildMove(x,y,x+1,y+1);
-				System.out.println ("pawn cap: " + toAdd);
+			//	System.out.println ("pawn cap: " + toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x-1,y+1) && isEnemy(board[y+1][x-1]))
 			{
 				toAdd = buildMove(x,y,x-1,y+1);
-				System.out.println ("pawn cap: " + toAdd);
+			//	System.out.println ("pawn cap: " + toAdd);
 				moves.add(toAdd);
 			}
 		}
@@ -624,19 +625,19 @@ public class chess {
 			if (isValid(x,y-1) && isNothing(board[y-1][x]))
 			{
 				toAdd = buildMove(x,y,x,y-1);
-				System.out.println("Pawn: " + toAdd);
+			//	System.out.println("Pawn: " + toAdd);
 				moves.add(toAdd);
 			}	
 			if (isValid(x+1,y-1) && isEnemy(board[y-1][x+1]))
 			{
 				toAdd = buildMove(x,y,x+1,y-1);
-				System.out.println ("Pawn cap: " + toAdd);
+			//	System.out.println ("Pawn cap: " + toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x-1,y-1) && isEnemy(board[y-1][x-1]))
 			{
 				toAdd = buildMove(x,y,x-1,y-1);
-				System.out.println ("Pawn cap: " + toAdd);
+			//	System.out.println ("Pawn cap: " + toAdd);
 				moves.add(toAdd);
 			}
 		}
@@ -698,7 +699,7 @@ public class chess {
 		strOut = findMoves();
 		for (int i = 0; i < strOut.size(); i++)
 		{
-			System.out.println(strOut.get(i));
+	//		System.out.println(strOut.get(i));
 		}
 		return strOut;
 	}
@@ -711,16 +712,179 @@ public class chess {
 		Collections.shuffle(shuf);
 		return shuf;
 	}
+
+	public static Vector<String> sortByScore(Vector<String> moves, int [] scores)
+	{
+		class PairMv
+		{
+			public int score;
+			public String move;
+		}
+		Vector<PairMv> pairs = new Vector<PairMv>();
+		int size = moves.size();
+		for (int i = 0; i < size; i++)
+		{
+			PairMv toAdd = new PairMv();
+			toAdd.score = scores[i];
+			toAdd.move = moves.get(i);
+			pairs.add(toAdd);
+		}
+		Collections.sort(pairs, new Comparator<PairMv>()
+		{
+			@Override
+			public int compare(PairMv lhs, PairMv rhs)
+			{
+				return lhs.score < rhs.score? -1: lhs.score > rhs.score? 1:0;
+			}
+		});
+		Vector<String> sorted = new Vector<String>();
+		for (int i = 0; i < size; i++)
+		{
+			String toAdd = pairs.get(i).move;
+			sorted.add(toAdd);
+		}
+		return sorted;
+	}
 	
 	public static Vector<String> movesEvaluated() {
 		// with reference to the state of the game, determine the possible moves and sort them in order of an increasing evaluation score before returning them - note that you can call the chess.movesShuffled() function in here
 		
-		return new Vector<String>();
+		Vector<String> moves = movesShuffled();	
+		int size = moves.size();	
+		if (size < 2)
+			return moves;
+		int [] scores = new int[moves.size()];
+
+		for (int i = 0; i < size; i++)
+		{
+			move(moves.get(i));
+			scores[i] = eval();		
+			undo();
+		}
+		moves = sortByScore(moves,scores);
+		return moves;
+	}
+
+	public static int encodeUndo(int xto, int xfrom, int yto, int yfrom, char pieceFrom, char pieceTo)
+	{
+		int code = 0;
+		int turn = -1;
+		int moveNum = -1;
+		int xtoCode = xto;
+		int xfromCode = xfrom;
+		int ytoCode = yto;
+		int yfromCode = yfrom;
+		int winner = -1;
+		int fromCode = -1;
+		int toCode = -1;
+		char winnerCh = winner();
+		char mover = pieceFrom;
+		char reciever = pieceTo;
+		mover = Character.toUpperCase(mover);
+		reciever = Character.toUpperCase(reciever);
+		if (winnerCh == '?')
+		{
+			winner = 0;
+		}	
+		else if (winnerCh == '=')
+		{
+			winner = 1;
+		}
+		else if (winnerCh == 'B')
+		{
+			winner = 2;
+		}
+		else
+		{
+			winner = 3;
+		}
+
+		if (blackMove == true)
+		{
+			turn = 1;
+		}
+		else
+		{
+			turn = 0;
+		}
+
+		moveNum = move;
+
+		if (mover == 'P')
+		{
+			fromCode = 0;
+		}
+		else if (mover == 'R')
+		{
+			fromCode = 1;
+		}
+		else if (mover == 'N')
+		{
+			fromCode = 2;
+		}
+		else if (mover == 'B')
+		{	
+			fromCode = 3;
+		}
+		else if (mover == 'Q')
+		{
+			fromCode = 4;
+		}
+		else if (mover == 'K')
+		{
+			fromCode = 5;
+		}
+		else
+		{
+			fromCode = 6;
+		}
+		
+		if (reciever  == 'P')
+		{
+			toCode = 0;
+		}
+		else if (reciever == 'R')
+		{
+			toCode = 1;
+		}
+		else if (reciever == 'N')
+		{
+			toCode = 2;
+		}
+		else if (reciever == 'B')
+		{	
+			toCode = 3;
+		}
+		else if (reciever == 'Q')
+		{
+			toCode = 4;
+		}
+		else if (reciever == 'K')
+		{
+			toCode = 5;
+		}
+		else
+		{
+			toCode = 6;
+		}
+		code += toCode;
+		code += fromCode *   10;
+		code += ytoCode *    100;
+		code += yfromCode *  1000;
+		code += xtoCode *    10000;
+		code += xfromCode *  100000;
+		code += moveNum *    1000000;
+		code += winner *     100000000;
+		code += turn *       1000000000;
+
+		return code; 
+
 	}
 	
 	public static void move(String charIn) {
 		// perform the supplied move (for example "a5-a4\n") and update the state of the game / your internal variables accordingly - note that it advised to do a sanity check of the supplied move
-
+		if (charIn.length() == 0)
+			return;
 		char xCh [] = new char [5];
 		xCh[0] = 'a';
 		xCh[1] = 'b';
@@ -732,7 +896,8 @@ public class chess {
 		int xto = -1;
 		int yfrom = -1;
 		int yto = -1;
-		
+		//if (winner() != '?')
+		//	return;	
 		for (int i = 0; i < 5; i++)
 		{
 			if (charIn.charAt(0) == xCh[i])
@@ -776,7 +941,10 @@ public class chess {
 		
 		if (charIn.charAt(4) == '6')
 			yto = 0;
-
+		System.out.println(Integer.toString( encodeUndo(xto, xfrom, yto, yfrom, board[yfrom][xfrom], board[yto][xto])));
+		//System.out.println(Integer.toString((10101026 % 100) / 10));
+		//stack.push(boardGet());
+		undoStack.push(encodeUndo(xto, xfrom, yto, yfrom, board[yfrom][xfrom], board[yto][xto]));
 		board[yto][xto] = board[yfrom][xfrom];
 		board[yfrom][xfrom] = '.';
 		if (yto == 0 && board[yto][xto] == 'P')
@@ -802,23 +970,247 @@ public class chess {
 	
 	public static String moveGreedy() {
 		// perform a greedy move and return it - one example output is given below - note that you can call the chess.movesEvaluated() function as well as the chess.move() function in here
-		
+		Vector<String> moves = movesEvaluated();
+		if (moves.size() > 0)
+		{
+			String s = moves.get(0);
+			move(s);
+			return s;	
+		}
 		return "a2-a3\n";
+	}
+
+	public static int negamax(int depth, int duration)
+	{
+		int score = -100000;
+		int tmp = 0;
+		Vector<String> moves = movesShuffled();
+		System.out.println(" " + Integer.toString(depth));
+		if (depth == 0 || winner() != '?')
+		{
+			return eval();
+		}
+		for (int i = 0; i < moves.size(); i++)
+		{
+			move(moves.get(i));
+			tmp = -negamax(depth - 1, duration);
+			score = score > tmp ? score:tmp;
+			undo();
+		}
+		return score;
 	}
 	
 	public static String moveNegamax(int intDepth, int intDuration) {
 		// perform a negamax move and return it - one example output is given below - note that you can call the the other functions in here
+		/*String bestMove = negamax(intDepth, intDuration);
+		move(bestMove);
+		return bestMove;*/
+		String best = "";
+		int score = -100000;
+		int tmp = 0;
+		Vector<String> moves = movesShuffled();
+		for (int i = 0; i < moves.size(); i++)
+		{
+			move(moves.get(i));
+			tmp = -negamax(intDepth - 1, intDuration);
+			undo();
+			if (tmp > score)
+			{
+				best = moves.get(i);
+				score = tmp;
+			}
+		}
+		move(best);
+		return best;
+	}
+
+	public static int alphaBeta(int depth, int alpha, int beta)
+	{
+
+		if (depth == 0 || winner() != '?')
+		{
+			return eval();
+		}
+		int score = -100000;
+		int tmp = 0;
+		Vector<String> moves = movesEvaluated();
+		int size = moves.size();
 		
-		return "a2-a3\n";
+		for (int i = 0; i < size; i++)
+		{
+			move(moves.get(i));
+			tmp = -alphaBeta(depth - 1, -beta, -alpha);
+			score = tmp > score?tmp:score;
+			undo();
+			
+			alpha = alpha > score?alpha:score;
+	
+			if (alpha >= beta)
+			{
+				break;
+			} 
+		}
+		return score;
 	}
 	
 	public static String moveAlphabeta(int intDepth, int intDuration) {
 		// perform a alphabeta move and return it - one example output is given below - note that you can call the the other functions in here
+		String best = "";
+		int alpha = -100000;
+		int beta = 100000;
+		int tmp = 0;
+		Vector<String> moves = movesEvaluated();
+		int size = moves.size();
+
+		for (int i =0; i < size; i++)
+		{
+			move(moves.get(i));
+			tmp = -alphaBeta(intDepth - 1,-beta, -alpha);
+			undo();
+			if (tmp > alpha)
+			{
+				best = moves.get(i);
+				alpha = tmp;
+			}	
+		}	
+		move(best);
+		return best;
+	}
+
+	public static void fundo()
+	{	
+		int code = 0;
+		int toCode = -1;
+		int fromCode = -1;
+		int ytoCode = -1;
+		int yfromCode = -1;
+		int xtoCode = -1;
+		int xfromCode = -1;
+		int moveNum = -1;
+		int winner = -1;
+		int turn = -1;
+		char to = 'm';
+		char from = 'n';
+		boolean bTurn = false;
+		char winnerCh = 'n';
+		if (undoStack.empty() == false)
+		{
+			code = undoStack.pop();
+			toCode = code %     10;
+			fromCode = (code %  100) /        10;
+			ytoCode = (code %   1000) /       100;
+			yfromCode = (code % 10000) /      1000;
+			xtoCode = (code %   100000) /     10000;
+			xfromCode = (code % 1000000) /    100000;
+			moveNum = (code %   100000000) /  1000000;
+			winner = (code %    1000000000) / 100000000;
+			if (code > 500000000)
+			{
+				turn = 1;
+			}
+			else
+			{
+				turn = 0;
+			}
+			if (turn == 1)
+			{
+				bTurn = true;
+			}
+			else
+			{
+				bTurn = false;
+			}
+			if (toCode == 0)
+			{
+				to = bTurn ? 'P':'p';
+			}
+			else if (toCode == 1)
+			{
+				to = bTurn ? 'R':'r';
+			}
+			else if (toCode == 2)
+			{
+				to = bTurn ? 'N':'n';
+			}
+			else if (toCode == 3)
+			{
+				to = bTurn ? 'B':'b';
+			}
+			else if (toCode == 4)
+			{
+				to = bTurn ? 'Q':'q';
+			}
+			else if (toCode == 5)
+			{
+				to = bTurn ? 'K':'k';
+			}
+			else
+			{
+				to = '.';
+			}
 		
-		return "a2-a3\n";
+			if (fromCode == 0)
+			{
+				from = bTurn ? 'p':'P';
+			}
+			else if (fromCode == 1)
+			{
+				from = bTurn ? 'r':'R';
+			}
+			else if (fromCode == 2)
+			{
+				from = bTurn ? 'n':'N';
+			}
+			else if (fromCode == 3)
+			{
+				from = bTurn ? 'b':'B';
+			}
+			else if (fromCode == 4)
+			{
+				from = bTurn ? 'q':'Q';
+			}
+			else if (fromCode == 5)
+			{
+				from = bTurn ? 'k':'K';
+			}
+				
+			if (winner == 0)
+			{
+				winnerCh = '?';
+			}
+			else if (winner == 1)
+			{
+				winnerCh = '=';
+			}
+			else if (winner == 2)
+			{
+				winnerCh = 'B';
+			}
+			else
+			{
+				winnerCh = 'W';
+			}
+			System.out.println("to: " + to);
+			System.out.println("from: " + from);
+			System.out.println("winner: " + winnerCh);
+			String t = bTurn == true? "black":"white";
+			System.out.println("turn: " + t);
+			System.out.println("moveNum: " + moveNum);
+			System.out.println("xfrom: " + xfromCode);
+			System.out.println("yfrom: " + yfromCode);
+			System.out.println("xto: " + xtoCode);
+			System.out.println("yto: " + ytoCode);
+			board[yfromCode][xfromCode] = from;
+			board[ytoCode][xtoCode] = to;
+			blackMove = bTurn;
+			move = moveNum;	
+		}
 	}
 	
 	public static void undo() {
 		// undo the last move and update the state of the game / your internal variables accordingly - note that you need to maintain an internal variable that keeps track of the previous history for this
+		//if (stack.empty() == false)
+			//boardSet(stack.pop());
+		fundo();
 	}
 }
