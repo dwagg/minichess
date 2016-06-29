@@ -7,6 +7,7 @@ import java.util.Comparator;
 public class chess {
         public static  char [][] board = new char[6][5];
 	public static int move = 1;
+	public static int rounds = 0;
 	private static boolean blackMove = false;
 //	public static Stack<String> //stack = new Stack<String>();
 	public static Stack<Integer> undoStack = new Stack<Integer>();
@@ -46,7 +47,6 @@ public class chess {
 			}
 			strOut += "\n";
 		} 
-		//System.out.print(strOut);		
 		return strOut;
 	}
 	
@@ -103,18 +103,14 @@ public class chess {
 			}
 		}
 		if (mvMax && blackKing && whiteKing){
-		//	System.out.println("=\n" + boardGet());
 			return '=';
 		}
 		if (blackKing != true){
-		//	System.out.println("W\n" + boardGet());
 			return 'W';
 		}
 		if (whiteKing != true){
-		//	System.out.println("B\n" + boardGet());
 			return 'B';
 		}
-		//System.out.println("?\n" + boardGet());
 		return '?';
 	}
 	
@@ -267,49 +263,41 @@ public class chess {
 			if ( isValid(x+1,y) && isOwn(board[y][x+1]) == false)
 			{
 				toAdd = buildMove(x,y,x+1,y);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x-1,y) && isOwn(board[y][x-1]) == false)
 			{
 				toAdd = buildMove(x,y,x-1,y);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x, y+1) && isOwn(board[y+1][x]) == false)
 			{
 				toAdd = buildMove(x,y,x,y+1);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x,y-1) && isOwn(board[y-1][x]) == false)
 			{
 				toAdd = buildMove(x,y,x,y-1);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x+1, y+1) && isOwn(board[y+1][x+1]) == false)
 			{
 				toAdd = buildMove(x,y,x+1,y+1);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x+1,y-1) && isOwn(board[y-1][x+1]) == false)
 			{
 				toAdd = buildMove(x,y,x+1,y-1);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x-1, y+1) && isOwn(board[y+1][x-1]) == false)
 			{
 				toAdd = buildMove(x,y,x-1,y+1);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x-1,y-1) && isOwn(board[y-1][x-1]) == false)
 			{
 				toAdd = buildMove(x,y,x-1,y-1);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 		}
@@ -326,7 +314,6 @@ public class chess {
 			while (isValid(x,y+i) && isOwn(board[y+i][x]) == false)
 			{
 				toAdd = buildMove(x,y,x,y+i);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y+i][x]))
 					i = 11;
@@ -336,7 +323,6 @@ public class chess {
 			while (isValid(x,y-i) && isOwn(board[y-i][x]) == false)
 			{
 				toAdd = buildMove(x,y,x,y-i);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y-i][x]))
 					i = 11;
@@ -346,7 +332,6 @@ public class chess {
 			while (isValid(x+i,y) && isOwn(board[y][x+i]) == false)
 			{
 				toAdd = buildMove(x,y,x+i,y);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y][x+i]))
 					i = 11;
@@ -356,7 +341,6 @@ public class chess {
 			while (isValid(x-i,y) && isOwn(board[y][x-i]) == false)
 			{
 				toAdd = buildMove(x,y,x-i,y);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y][x-i]))
 					i = 11;
@@ -366,7 +350,6 @@ public class chess {
 			while (isValid(x+i,y+i) && isOwn(board[y+i][x+i]) == false)
 			{
 				toAdd = buildMove(x,y,x+i,y+i);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y+i][x+i]))
 					i = 11;
@@ -376,7 +359,6 @@ public class chess {
 			while (isValid(x+i,y-i) && isOwn(board[y-i][x+i]) == false)
 			{
 				toAdd = buildMove(x,y,x+i,y-i);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y-i][x+i]))
 					i = 11;
@@ -386,7 +368,6 @@ public class chess {
 			while (isValid(x-i,y+i) && isOwn(board[y+i][x-i]) == false)
 			{
 				toAdd = buildMove(x,y,x-i,y+i);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y+i][x-i]))
 					i = 11;
@@ -396,7 +377,6 @@ public class chess {
 			while (isValid(x-i,y-i) && isOwn(board[y-i][x-i]) == false)
 			{
 				toAdd = buildMove(x,y,x-i,y-i);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y-i][x-i]))
 					i = 11;
@@ -416,26 +396,22 @@ public class chess {
 			if ( isValid(x+1,y) && isNothing(board[y][x+1]))
 			{
 				toAdd = buildMove(x,y,x+1,y);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x-1,y) && isNothing(board[y][x-1]))
 			{
 				toAdd = buildMove(x,y,x-1,y);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				
 			}
 			if (isValid(x, y+1) && isNothing(board[y+1][x]))
 			{
 				toAdd = buildMove(x,y,x,y+1);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x,y-1) && isNothing(board[y-1][x]))
 			{
 				toAdd = buildMove(x,y,x,y-1);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 
@@ -444,7 +420,6 @@ public class chess {
 			while (isValid(x+i,y+i) && isOwn(board[y+i][x+i]) == false)
 			{
 				toAdd = buildMove(x,y,x+i,y+i);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y+i][x+i]))
 					i = 11;
@@ -454,7 +429,6 @@ public class chess {
 			while (isValid(x-i,y+i) && isOwn(board[y+i][x-i]) == false)
 			{
 				toAdd = buildMove(x,y,x-i,y+i);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y+i][x-i]))
 					i = 11;
@@ -464,7 +438,6 @@ public class chess {
 			while (isValid(x+i,y-i) && isOwn(board[y-i][x+i]) == false)
 			{
 				toAdd = buildMove(x,y,x+i,y-i);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y-i][x+i]))
 					i = 11;
@@ -474,7 +447,6 @@ public class chess {
 			while (isValid(x-i,y-i) && isOwn(board[y-i][x-i]) == false)
 			{
 				toAdd = buildMove(x,y,x-i,y-i);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y-i][x-i]))
 					i = 11;
@@ -493,49 +465,41 @@ public class chess {
 			if (isValid(x+2, y+1) && isOwn(board[y+1][x+2]) == false)
 			{	
 				toAdd = buildMove(x,y,x+2,y+1);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x+1,y+2) && isOwn(board[y+2][x+1]) == false)
 			{
 				toAdd = buildMove(x,y,x+1,y+2);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x+2,y-1) && isOwn(board[y-1][x+2]) == false)
 			{
 				toAdd = buildMove(x,y,x+2,y-1);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x+1,y-2) && isOwn(board[y-2][x+1]) == false)
 			{
 				toAdd = buildMove(x,y,x+1,y-2);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x-2,y+1) && isOwn(board[y+1][x-2]) == false)
 			{
 				toAdd = buildMove(x,y,x-2,y+1);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x-1,y+2) && isOwn(board[y+2][x-1]) == false)
 			{
 				toAdd = buildMove(x,y,x-1,y+2);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x-2,y-1) && isOwn(board[y-1][x-2]) == false)
 			{
 				toAdd = buildMove(x,y,x-2,y-1);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x-1,y-2) && isOwn(board[y-2][x-1]) == false)
 			{
 				toAdd = buildMove(x,y,x-1,y-2);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 			}
 		}
@@ -551,7 +515,6 @@ public class chess {
 			while (isValid(x+i,y) && isOwn(board[y][x+i]) == false)
 			{
 				toAdd = buildMove(x,y,x+i,y);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y][x+i]))
 					i = 11;
@@ -561,7 +524,6 @@ public class chess {
 			while (isValid(x-i,y) && isOwn(board[y][x-i]) == false)
 			{
 				toAdd = buildMove(x,y,x-i,y);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y][x-i]))
 					i = 11;
@@ -571,7 +533,6 @@ public class chess {
 			while (isValid(x,y+i) && isOwn(board[y+i][x]) == false)
 			{
 				toAdd = buildMove(x,y,x,y+i);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y+i][x]))
 					i = 11;
@@ -581,7 +542,6 @@ public class chess {
 			while (isValid(x,y-i) && isOwn(board[y-i][x]) == false)
 			{
 				toAdd = buildMove(x,y,x,y-i);
-			//	System.out.println(toAdd);
 				moves.add(toAdd);
 				if (isEnemy(board[y-i][x]))
 					i = 11;
@@ -603,19 +563,16 @@ public class chess {
 			if (isValid(x,y+1) && isNothing(board[y+1][x]))
 			{
 				toAdd = buildMove(x,y,x,y+1);
-			//	System.out.println( "pawn: " + toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x+1,y+1) && isEnemy(board[y+1][x+1]))
 			{
 				toAdd = buildMove(x,y,x+1,y+1);
-			//	System.out.println ("pawn cap: " + toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x-1,y+1) && isEnemy(board[y+1][x-1]))
 			{
 				toAdd = buildMove(x,y,x-1,y+1);
-			//	System.out.println ("pawn cap: " + toAdd);
 				moves.add(toAdd);
 			}
 		}
@@ -625,19 +582,16 @@ public class chess {
 			if (isValid(x,y-1) && isNothing(board[y-1][x]))
 			{
 				toAdd = buildMove(x,y,x,y-1);
-			//	System.out.println("Pawn: " + toAdd);
 				moves.add(toAdd);
 			}	
 			if (isValid(x+1,y-1) && isEnemy(board[y-1][x+1]))
 			{
 				toAdd = buildMove(x,y,x+1,y-1);
-			//	System.out.println ("Pawn cap: " + toAdd);
 				moves.add(toAdd);
 			}
 			if (isValid(x-1,y-1) && isEnemy(board[y-1][x-1]))
 			{
 				toAdd = buildMove(x,y,x-1,y-1);
-			//	System.out.println ("Pawn cap: " + toAdd);
 				moves.add(toAdd);
 			}
 		}
@@ -697,10 +651,9 @@ public class chess {
 		
 		Vector<String> strOut = new Vector<String>();
 		strOut = findMoves();
-		for (int i = 0; i < strOut.size(); i++)
-		{
-	//		System.out.println(strOut.get(i));
-		}
+//		for (int i = 0; i < strOut.size(); i++)
+//		{
+//		}
 		return strOut;
 	}
 	
@@ -941,7 +894,7 @@ public class chess {
 		
 		if (charIn.charAt(4) == '6')
 			yto = 0;
-		System.out.println(Integer.toString( encodeUndo(xto, xfrom, yto, yfrom, board[yfrom][xfrom], board[yto][xto])));
+	//	System.out.println(Integer.toString( encodeUndo(xto, xfrom, yto, yfrom, board[yfrom][xfrom], board[yto][xto])));
 		//System.out.println(Integer.toString((10101026 % 100) / 10));
 		//stack.push(boardGet());
 		undoStack.push(encodeUndo(xto, xfrom, yto, yfrom, board[yfrom][xfrom], board[yto][xto]));
@@ -985,7 +938,7 @@ public class chess {
 		int score = -100000;
 		int tmp = 0;
 		Vector<String> moves = movesShuffled();
-		System.out.println(" " + Integer.toString(depth));
+	//	System.out.println(" " + Integer.toString(depth));
 		if (depth == 0 || winner() != '?')
 		{
 			return eval();
@@ -1026,7 +979,11 @@ public class chess {
 
 	public static int alphaBeta(int depth, int alpha, int beta)
 	{
-
+		if (rounds % 100000 == 0)
+		{
+			System.out.print(".");
+		}
+		rounds++;
 		if (depth == 0 || winner() != '?')
 		{
 			return eval();
@@ -1053,6 +1010,14 @@ public class chess {
 		return score;
 	}
 	
+/*	public static int tourneyAlphaBeta(int depth, int alpha, int beta)
+	{
+		long startTime = System.currentTimeMillis();
+		do{
+		
+		}while ((System.currentTimeMillis() - startTime) * 10 < duration); 
+	}
+*/	
 	public static String moveAlphabeta(int intDepth, int intDuration) {
 		// perform a alphabeta move and return it - one example output is given below - note that you can call the the other functions in here
 		String best = "";
@@ -1061,17 +1026,46 @@ public class chess {
 		int tmp = 0;
 		Vector<String> moves = movesEvaluated();
 		int size = moves.size();
-
-		for (int i =0; i < size; i++)
+		rounds = 0;
+		if (intDepth < 0)
 		{
-			move(moves.get(i));
-			tmp = -alphaBeta(intDepth - 1,-beta, -alpha);
-			undo();
-			if (tmp > alpha)
+			//Tourny Mode
+			long startTime = System.currentTimeMillis();
+			int duration = 0;
+			int depth = 5;
+			if (move < 40)
+				 duration = intDuration / ( 40 - move );
+			long elapsed = 0;
+			
+			do{
+				for (int i = 0; i < size; i++)
+				{
+					move(moves.get(i));
+					tmp = -alphaBeta(depth,-beta,-alpha);
+					undo();
+					if (tmp > alpha)
+					{
+						best = moves.get(i);
+						alpha = tmp;
+					}
+				} 
+				depth++;
+				elapsed = System.currentTimeMillis() - startTime; 
+			}while (elapsed * 12 < duration);
+		}
+		else
+		{
+			for (int i =0; i < size; i++)
 			{
-				best = moves.get(i);
-				alpha = tmp;
-			}	
+				move(moves.get(i));
+				tmp = -alphaBeta(intDepth - 1,-beta, -alpha);
+				undo();
+				if (tmp > alpha)
+				{
+					best = moves.get(i);
+					alpha = tmp;
+				}	
+			}
 		}	
 		move(best);
 		return best;
@@ -1190,7 +1184,7 @@ public class chess {
 			{
 				winnerCh = 'W';
 			}
-			System.out.println("to: " + to);
+			/*System.out.println("to: " + to);
 			System.out.println("from: " + from);
 			System.out.println("winner: " + winnerCh);
 			String t = bTurn == true? "black":"white";
@@ -1199,7 +1193,7 @@ public class chess {
 			System.out.println("xfrom: " + xfromCode);
 			System.out.println("yfrom: " + yfromCode);
 			System.out.println("xto: " + xtoCode);
-			System.out.println("yto: " + ytoCode);
+			System.out.println("yto: " + ytoCode);*/
 			board[yfromCode][xfromCode] = from;
 			board[ytoCode][xtoCode] = to;
 			blackMove = bTurn;
